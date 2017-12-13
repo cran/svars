@@ -7,14 +7,14 @@
 #'@param horizon Time horizon of impulse response functions
 #'@param nboot Number of bootstrap iterations
 #'@param nc Number of processor cores (Not available on windows machines)
-#'@param dd Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.  If not supplied, it will be culculated by the function
+#'@param dd Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.  If not supplied, it will be calculated by the function
 #'@param itermax Maximum number of iterations for DEoptim
 #'@param steptol Tolerance for steps without improvement for DEoptim
 #'@param iter2 Number of iterations for the second optimization
 #'
 #'@seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}
 #'
-#'@references Brueggemann, R., Jentsch, C., and Carsten, T. (2016). Inference in vars with conditional heteroskedasticity of unknown form. Journal of Econometrics 191, 69-85.
+#'@references Brueggemann, R., Jentsch, C., and Trenkler, C. (2016). Inference in VARs with conditional heteroskedasticity of unknown form. Journal of Econometrics 191, 69-85.
 #'
 #' @examples
 #' \donttest{
@@ -128,10 +128,20 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL,  iterma
   # Bootstrapfunction
   bootf <- function(Ustar1){
 
-    Ystar <- as.data.frame(t(A %*% Z + Ustar1))
-    varb <- VAR(Ystar, p = p)
+    Ystar <- t(A %*% Z + Ustar1)
+    Bstar <- t(Ystar) %*% t(Z) %*% solve(Z %*% t(Z))
 
-    Sigma_u_star <- crossprod(residuals(varb))/(obs - 1 - k * p)
+    Ustar <- t(y[-c(1:p),]) - Bstar %*% Z
+
+    Sigma_u_star <- tcrossprod(Ustar)/(ncol(Ustar1) - 1 - k * p)
+
+    varb <- list(y = y,
+                 coef_x = Bstar,
+                 residuals = t(Ustar),
+                 p = p,
+                 type = x$type)
+    class(varb) <- 'var.boot'
+
 
     if(x$method == "Non-Gaussian maximum likelihood"){
       temp <- id.ngml(varb, stage3 = x$stage3)
@@ -146,7 +156,7 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL,  iterma
     Pstar <- temp$B
 
     Pstar1 <- sqrt.f(Pstar, Sigma_u_star)
-    diag_sigma_root <- diag(diag(suppressMessages(expm(B))))
+    diag_sigma_root <- diag(diag(suppressMessages(sqrtm(Sigma_u_hat_old))))
 
     frobP <- frobICA_mod(t(solve(diag_sigma_root)%*%Pstar1), t(solve(diag_sigma_root)%*%B), standardize=TRUE)
     Pstar <- Pstar1%*%frobP$perm

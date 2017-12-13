@@ -18,7 +18,7 @@ mb.boot(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL,
 
 \item{nc}{Number of processor cores (Not available on windows machines)}
 
-\item{dd}{Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.  If not supplied, it will be culculated by the function}
+\item{dd}{Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.  If not supplied, it will be calculated by the function}
 
 \item{itermax}{Maximum number of iterations for DEoptim}
 
@@ -51,7 +51,7 @@ plot(bb, lowerq = 0.05, upperq = 0.95)
 
 }
 \references{
-Brueggemann, R., Jentsch, C., and Carsten, T. (2016). Inference in vars with conditional heteroskedasticity of unknown form. Journal of Econometrics 191, 69-85.
+Brueggemann, R., Jentsch, C., and Trenkler, C. (2016). Inference in VARs with conditional heteroskedasticity of unknown form. Journal of Econometrics 191, 69-85.
 }
 \seealso{
 \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}
