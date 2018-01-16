@@ -23,7 +23,7 @@
 #' # pi = inflation
 #' # i = interest rates
 #' set.seed(23211)
-#' v1 <- VAR(USA, lag.max = 10, ic = "AIC" )
+#' v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
 #' x1 <- id.ngml(v1)
 #' summary(x1)
 #'
@@ -196,7 +196,7 @@ mb.boot <- function(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL,  iterma
   result <- list(true = ip,
                  bootstrap = ipb,
                  SE = SE)
-  class(result) <- 'boot'
+  class(result) <- 'sboot'
   return(result)
 }
 

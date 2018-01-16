@@ -1,8 +1,8 @@
 Package: svars
 Type: Package
 Title: Data-Driven Identification of SVAR Models
-Version: 1.0.1
-Date: 2017-12-13
+Version: 1.1.0
+Date: 2018-01-15
 Author: Alexander Lange [aut, cre],
         Bernhard Dalheimer [aut],
         Helmut Herwartz [aut],
@@ -20,6 +20,6 @@ License: GPL (>= 2)
 LazyData: TRUE
 RoxygenNote: 6.0.1
 NeedsCompilation: no
-Packaged: 2017-12-13 09:29:57 UTC; alex
+Packaged: 2018-01-16 12:18:07 UTC; alex
 Repository: CRAN
-Date/Publication: 2017-12-13 09:36:59 UTC
+Date/Publication: 2018-01-16 12:25:56 UTC
