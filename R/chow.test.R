@@ -3,8 +3,8 @@
 #' The Chow test for structural change is implemented as sample-split and break-point test (see Luetkepohl and Kraetzig, 2004, p. 135). A multivariate time series and the presupposed structural break need to be provided.
 #'
 #' @param Y Data of multivariate time series in matrix form
-#' @param SB Integer or date character. The structural break is specified either by an integer (number of observations in the pre-break period) or
-#'                    a date character. If a date character is provided, either a date vector containing the whole time line
+#' @param SB Integer, vector or date character. The structural break is specified either by an integer (number of observations in the pre-break period),
+#'                    a vector of ts() frequencies if a ts object is used in the VAR or a date character. If a date character is provided, either a date vector containing the whole time line
 #'                    in the corresponding format or common time parameters need to be provided
 #' @param p Integer. Number of lags included in the presumed VAR model
 #' @param nboot Integer. Number of bootstrap iterations to calculate quantiles and p-values
@@ -28,20 +28,24 @@
 #'@examples
 #' \donttest{
 #' # Testing for structural break in USA data
-#' z1 = chow.test(USA, SB = 65, p = 6)
+#' z1 = chow.test(USA, SB = 59, p = 6)
 #' summary(z1)
 #'
 #' #Structural brake via Dates
 #' #given that time series vector with dates is available
-#' dateVector = seq(as.Date("1965/1/1"), as.Date("2008/6/1"), "quarter")
-#' z2 <- chow.test(USA, SB = "1985-01-01", p = 6, format = "%Y-%m-%d", dateVector = dateVector)
+#' dateVector = seq(as.Date("1965/1/1"), as.Date("2008/7/1"), "quarter")
+#' z2 <- chow.test(USA, SB = "1979-07-01", p = 6, format = "%Y-%m-%d", dateVector = dateVector)
 #' summary(z2)
 #'
 #' # alternatively pass sequence arguments directly
-#' z3 <- chow.test(USA, SB = "1985-01-01", p = 6, format = "%Y-%m-%d",
-#'                 start = "1965-01-01", end = "2008-06-01",
+#' z3 <- chow.test(USA, SB = "1979-07-01", p = 6, format = "%Y-%m-%d",
+#'                 start = "1965-01-01", end = "2008-07-01",
 #'                 frequency = "quarter")
+#' summary(z3)
 #'
+#' # or provide ts date format (For quarterly, monthly, weekly and daily frequencies only)
+#' z4 <- chow.test(USA, SB = c(1979,3), p = 6)
+#' summary(z4)
 #' }
 #' @import stats
 #' @importFrom utils combn
@@ -72,6 +76,24 @@ chow.test <- function(Y, SB, p, nboot = 500, rademacher="FALSE",start = NULL, en
     SB <- getStructuralBreak(SB = SB, start = start, end = end,
                              frequency = frequency, format = format, dateVector = dateVector, Tob = Tob, p = p)
   }
+
+  if(length(SB) != 1 & inherits(Y, "ts")){
+    SBts = SB
+    SB = dim(window(Y, end = SB))[1]
+    if(frequency(Y == 4)){
+      SBcharacter = paste(SBts[1], " Q", SBts[2], sep = "")
+    }else if(frequency(Y == 12)){
+      SBcharacter = paste(SBts[1], " M", SBts[2], sep = "")
+    }else if(frequency(Y == 52)){
+      SBcharacter = paste(SBts[1], " W", SBts[2], sep = "")
+    }else if(frequency(Y == 365.25)){
+      SBcharacter = paste(SBts[1], "-", SBts[2], "-", SBts[3], sep = "")
+    }else{
+      SBcharacter = NULL
+    }
+
+  }
+
 
   # function to create Z matrix
   y_lag_cr <- function(y, lag_length){

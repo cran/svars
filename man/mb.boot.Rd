@@ -5,7 +5,7 @@
 \title{Moving block bootstrap for IRFs of identified SVARs}
 \usage{
 mb.boot(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL,
-  itermax = 300, steptol = 200, iter2 = 50)
+  signrest = NULL, itermax = 300, steptol = 200, iter2 = 50)
 }
 \arguments{
 \item{x}{SVAR object of class "svars"}
@@ -18,13 +18,25 @@ mb.boot(x, b.length = 15, horizon, nboot, nc = 1, dd = NULL,
 
 \item{nc}{Number of processor cores (Not available on windows machines)}
 
-\item{dd}{Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.  If not supplied, it will be calculated by the function}
+\item{dd}{Object of class 'indepTestDist'. A simulated independent sample of the same size as the data.
+If not supplied, it will be calculated by the function}
+
+\item{signrest}{A list with vectors containing 1 and -1, e.g. c(1,-1,1), indicating a sign pattern of specific shocks to be tested
+with the help of the bootstrap samples.}
 
 \item{itermax}{Maximum number of iterations for DEoptim}
 
 \item{steptol}{Tolerance for steps without improvement for DEoptim}
 
 \item{iter2}{Number of iterations for the second optimization}
+}
+\value{
+A list of class "sboot" with elements
+\item{boot_mean}{Mean of bootstrapped covariance decompositions}
+\item{sign_complete}{Frequency of bootstrapped covariance decompositions which conform the complete predetermined sign pattern. If signrest=NULL,
+ the frequency of bootstrapped covariance decompositions that hold the same sign pattern as the point estimate is provided.}
+\item{sign_part}{Frequency of single shocks in all bootstrapped covariance decompositions which accord to a specific predetermined sign pattern
+ }
 }
 \description{
 Calculating confidence bands for impulse response via moving block bootstrap
@@ -37,21 +49,22 @@ Calculating confidence bands for impulse response via moving block bootstrap
 # i = interest rates
 set.seed(23211)
 v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
-x1 <- id.ngml(v1)
+x1 <- id.dc(v1)
 summary(x1)
 
-# switching columns according to sign patter
-x1$B <- x1$B[,c(3,2,1)]
-x1$B[,3] <- x1$B[,3]*(-1)
-
 # impulse response analysis with confidence bands
-bb <- mb.boot(x1, b.length = 15, nboot = 100, horizon = 30)
-plot(bb, lowerq = 0.05, upperq = 0.95)
+# Checking how often theory based impact relations appear
+signrest <- list(demand = c(1,1,1), supply = c(-1,1,1), money = c(-1,-1,1))
+bb <- mb.boot(x1, b.length = 15, nboot = 500, horizon = 30, nc = 1, signrest = signrest)
+summary(bb)
+plot(bb, lowerq = 0.16, upperq = 0.84)
 }
 
 }
 \references{
-Brueggemann, R., Jentsch, C., and Trenkler, C. (2016). Inference in VARs with conditional heteroskedasticity of unknown form. Journal of Econometrics 191, 69-85.
+Brueggemann, R., Jentsch, C., and Trenkler, C. (2016). Inference in VARs with conditional heteroskedasticity of unknown form. Journal of Econometrics 191, 69-85.\cr
+  Herwartz, H., 2017. Hodges Lehmann detection of structural shocks -
+       An analysis of macroeconomic dynamics in the Euro Area, Oxford Bulletin of Economics and Statistics
 }
 \seealso{
 \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}

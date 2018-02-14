@@ -11,8 +11,8 @@ id.cv(x, SB, start = NULL, end = NULL, frequency = NULL, format = NULL,
 \arguments{
 \item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object}
 
-\item{SB}{Integer or date character. The structural break is specified either by an integer (number of observations in the pre-break period) or
-a date character. If a date character is provided, either a date vector containing the whole time line
+\item{SB}{Integer, vector or date character. The structural break is specified either by an integer (number of observations in the pre-break period),
+a vector of ts() frequencies if a ts object is used in the VAR or a date character. If a date character is provided, either a date vector containing the whole time line
 in the corresponding format (see examples) or common time parameters need to be provided}
 
 \item{start}{Character. Start of the time series (only if dateVector is empty)}
@@ -50,18 +50,19 @@ A list of class "svars" with elements
 Given an estimated VAR model, this function applies changes in volatility to identify the structural impact matrix B of the corresponding SVAR model
 \deqn{y_t=c_t+A_1 y_{t-1}+...+A_p y_{t-p}+u_t
 =c_t+A_1 y_{t-1}+...+A_p y_{t-p}+B \epsilon_t.}
-Matrix B corresponds to the decomposition of the pre-break covariance matrix \eqn{\Sigma_1=B B'}. The post-break covariance corresponds to \eqn{\Sigma_2=B\Lambda B'} where \eqn{\Lambda} is the estimated unconditional heteroskedasticity matrix.
+Matrix B corresponds to the decomposition of the pre-break covariance matrix \eqn{\Sigma_1=B B'}.
+The post-break covariance corresponds to \eqn{\Sigma_2=B\Lambda B'} where \eqn{\Lambda} is the estimated unconditional heteroskedasticity matrix.
 }
 \examples{
 \donttest{
 # data contains quartlery observations from 1965Q1 to 2008Q2
-# assumed structural break in 1979Q4
+# assumed structural break in 1979Q3
 # x = output gap
 # pi = inflation
 # i = interest rates
 set.seed(23211)
 v1 <- vars::VAR(USA, lag.max = 10, ic = "AIC" )
-x1 <- id.cv(v1, SB = 60)
+x1 <- id.cv(v1, SB = 59)
 summary(x1)
 
 # switching columns according to sign patter
@@ -76,16 +77,23 @@ plot(i1, scales = 'free_y')
 # Assuming that the interest rate doesn't influence the output gap on impact
 restMat <- matrix(rep(NA, 9), ncol = 3)
 restMat[1,3] <- 0
-x2 <- id.cv(v1, SB = 60, restriction_matrix = restMat)
+x2 <- id.cv(v1, SB = 59, restriction_matrix = restMat)
+summary(x2)
 
 #Structural brake via Dates
 # given that time series vector with dates is available
-dateVector = seq(as.Date("1965/1/1"), as.Date("2008/6/1"), "quarter")
-x3 <- id.cv(v1, SB = "1985-01-01", format = "\%Y-\%m-\%d", dateVector = dateVector)
+dateVector = seq(as.Date("1965/1/1"), as.Date("2008/7/1"), "quarter")
+x3 <- id.cv(v1, SB = "1979-07-01", format = "\%Y-\%m-\%d", dateVector = dateVector)
+summary(x3)
 
 # or pass sequence arguments directly
-x4 <- id.cv(v1, SB = "1985-01-01", format = "\%Y-\%m-\%d", start = "1965-01-01", end = "2008-06-01",
+x4 <- id.cv(v1, SB = "1979-07-01", format = "\%Y-\%m-\%d", start = "1965-01-01", end = "2008-07-01",
 frequency = "quarter")
+summary(x4)
+
+# or provide ts date format (For quarterly, monthly, weekly and daily frequencies only)
+x5 <- id.cv(v1, SB = c(1979, 3))
+summary(x5)
 
 }
 }
