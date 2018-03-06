@@ -1,8 +1,8 @@
 Package: svars
 Type: Package
 Title: Data-Driven Identification of SVAR Models
-Version: 1.1.1
-Date: 2018-02-14
+Version: 1.1.2
+Date: 2018-03-06
 Author: Alexander Lange [aut, cre],
   Bernhard Dalheimer [aut],
   Helmut Herwartz [aut],
@@ -16,11 +16,11 @@ Description: Implements data-driven identification methods for structural vector
              least dependent innovations (Herwartz, H., Ploedt, M., (2016) <doi:10.1016/j.jimonfin.2015.11.001>) or non-Gaussian maximum likelihood (Lanne, M., Meitz, M., Saikkonen, P. (2017) <doi:10.1016/j.jeconom.2016.06.002>).
 Imports: vars, expm, reshape2, ggplot2, copula, clue, pbapply,
         steadyICA, tsDyn, DEoptim
-License: GPL (>= 2)
+License: MIT + file LICENSE
 LazyData: TRUE
 RoxygenNote: 6.0.1
 Suggests: testthat
 NeedsCompilation: no
-Packaged: 2018-02-14 17:45:49 UTC; alex
+Packaged: 2018-03-06 10:14:19 UTC; alex
 Repository: CRAN
-Date/Publication: 2018-02-14 17:56:34 UTC
+Date/Publication: 2018-03-06 10:28:27 UTC
