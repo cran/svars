@@ -10,11 +10,11 @@
 #' @return A list of class "svars" with elements
 #' \item{B}{Estimated structural impact matrix B, i.e. unique decomposition of the covariance matrix of reduced form errors}
 #' \item{A_hat}{Estimated VAR parameter}
-#' \item{method}{Method applied for identifaction}
+#' \item{method}{Method applied for identification}
 #' \item{n}{Number of observations}
 #' \item{type}{Type of the VAR model, e.g. 'const'}
 #'
-#' @seealso For alternative identification approaches see \code{\link{id.cvm}}, \code{\link{id.cv}} or \code{\link{id.ngml}}
+#' @seealso For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.cvm}}, \code{\link{id.cv}} or \code{\link{id.ngml}}
 #'
 #'@references Matteson, D. S. & Tsay, R. S., 2013. Independent Component Analysis via Distance Covariance, pre-print\cr
 #'      Szekely, G. J.; Rizzo, M. L. & Bakirov, N. K., 2007. Measuring and testing dependence by correlation of distances Ann. Statist., 35, 2769-2794\cr
@@ -65,17 +65,20 @@ id.dc <- function(x, PIT=FALSE){
 
   if(inherits(x, "var.boot")){
     p <- x$p
-    y <- x$y
+    y <- t(x$y)
+    yOut = x$y
     type = x$type
     coef_x = x$coef_x
   }else  if(inherits(x, "varest")){
     p <- x$p
     y <- t(x$y)
+    yOut = x$y
     type = x$type
     coef_x = coef(x)
   }else if(inherits(x, "nlVar")){
     p <- x$lag
     y <- t(x$model[, 1:k])
+    yOut <- x$model[, 1:k]
     coef_x <- t(coef(x))
 
     if(inherits(x, "VECM")){
@@ -96,6 +99,8 @@ id.dc <- function(x, PIT=FALSE){
   }else if(inherits(x, "list")){
     p <- x$order
     y <- t(x$data)
+    yOut <- x$data
+    coef_x <- t(coef(x))
     coef_x <- x$coef
     if(x$cnst == TRUE){
       coef_x <- coef_x[c(2:nrow(coef_x),1),]
@@ -109,6 +114,7 @@ id.dc <- function(x, PIT=FALSE){
     names(coef_x) <- colnames(x$y)
     p <- x$p
     y <- t(x$y)
+    yOut <- x$y
 
     for (i in seq_len(k)) {
       for (j in seq_len(p)) coef_x[[i]] <- c(coef_x[[i]], x$A[[j]][i,])
@@ -178,15 +184,14 @@ id.dc <- function(x, PIT=FALSE){
     }
   }
 
-
   result <- list(B = P,       # estimated B matrix (unique decomposition of the covariance matrix)
               A_hat = A_hat,  # estimated VAR parameter
               method =        "Distance covariances",
               n = Tob,        # number of observations
               type = type,    # type of the VAR model e.g 'const'
-              y = t(y),        # Data
-              p = unname(p),        # number of lags
-              K = k,         # number of time series
+              y = yOut,       # Data
+              p = unname(p),  # number of lags
+              K = k,          # number of time series
               PIT=PIT
               )
   class(result) <- "svars"

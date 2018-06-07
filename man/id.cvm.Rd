@@ -21,7 +21,7 @@ id.cvm(x, dd = NULL, itermax = 500, steptol = 100, iter2 = 75)
 A list of class "svars" with elements
 \item{B}{Estimated structural impact matrix B, i.e. unique decomposition of the covariance matrix of reduced form errors}
 \item{A_hat}{Estimated VAR parameter}
-\item{method}{Method applied for identifaction}
+\item{method}{Method applied for identification}
 \item{n}{Number of observations}
 \item{type}{Type of the VAR model, e.g. 'const'}
 \item{y}{Data}
@@ -38,7 +38,7 @@ A list of class "svars" with elements
 Given an estimated VAR model, this function applies independence-based identification for the structural impact matrix B of the corresponding SVAR model
 \deqn{y_t=c_t+A_1 y_{t-1}+...+A_p y_{t-p}+u_t   =c_t+A_1 y_{t-1}+...+A_p y_{t-p}+B \epsilon_t.}
 Matrix B corresponds to the unique decomposition of the least squares covariance matrix \eqn{\Sigma_u=B B'} if the vector of structural shocks \eqn{\epsilon_t} contains at most one Gaussian shock (Comon, 1994).
-A nonparametric dependence measure, the Cramer-von Mises distance (Genest and Remillard, 2004), determines least dependent structural shocks. The minimum is optained by a two step optimization algorithm similar to the technique described in Herwartz and Ploedt (2016).
+A nonparametric dependence measure, the Cramer-von Mises distance (Genest and Remillard, 2004), determines least dependent structural shocks. The minimum is obtained by a two step optimization algorithm similar to the technique described in Herwartz and Ploedt (2016).
 }
 \examples{
 \donttest{
@@ -63,11 +63,11 @@ plot(i1, scales = 'free_y')
 
 }
 \references{
-Herwartz, H., 2015. Structural VAR modelling with independent innovations - An analysis of macroeconomic dynamics in the euro area based on a novel identification scheme\cr
+Herwartz, H., 2018. Hodges Lehmann detection of structural shocks - An Analysis of macroeconomic dynamics in the Euro Area, Oxford Bulletin of Economics and Statistics\cr
  Herwartz, H. & Ploedt, M., 2016. The macroeconomic effects of oil price shocks: Evidence from a statistical identification approach, Journal of International Money and Finance, 61, 30-44\cr
  Comon, P., 1994. Independent component analysis, A new concept?, Signal Processing, 36, 287-314\cr
  Genest, C. & Remillard, B., 2004. Tests of independence and randomness based on the empirical copula process, Test, 13, 335-370\cr
 }
 \seealso{
-For alternative identification approaches see \code{\link{id.cv}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
+For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.cv}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
 }

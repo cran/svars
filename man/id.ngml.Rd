@@ -23,7 +23,7 @@ A list of class "svars" with elements
 \item{B_stand}{Estimated standardized structural impact matrix}
 \item{B_stand_SE}{Standard errors of standardized matrix B_stand}
 \item{Lik}{Function value of likelihood}
-\item{method}{Method applied for identifaction}
+\item{method}{Method applied for identification}
 \item{n}{Number of observations}
 \item{type}{Type of the VAR model, e.g. 'const'}
 }
@@ -58,5 +58,5 @@ Lanne, M., Meitz, M., Saikkonen, P., 2017. Identification and estimation of non-
 Comon, P., 1994. Independent component analysis, A new concept?, Signal Processing, 36, 287-314
 }
 \seealso{
-For alternative identification approaches see \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.cv}}
+For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.cvm}}, \code{\link{id.dc}} or \code{\link{id.cv}}
 }

@@ -16,7 +16,7 @@
 #'@param iter2 Number of iterations for the second optimization
 #' @return A list of class "sboot" with elements
 #' \item{boot_mean}{Mean of bootstrapped covariance decompositions}
-#' \item{sign_complete}{Frequency of appearance of the complete sign pattern in all bootstrapped covaraince decompositions}
+#' \item{sign_complete}{Frequency of appearance of the complete sign pattern in all bootstrapped covariance decompositions}
 #' \item{sign_part}{Frequency of bootstrapped covariance decompositions which conform the complete predetermined sign pattern. If signrest=NULL,
 #'  the frequency of bootstrapped covariance decompositions that hold the same sign pattern as the point estimate is provided.}
 #' \item{sign_part}{Frequency of single shocks in all bootstrapped covariance decompositions which accord to a specific predetermined sign pattern
@@ -26,7 +26,7 @@
 #'   Herwartz, H., 2017. Hodges Lehmann detection of structural shocks -
 #'        An analysis of macroeconomic dynamics in the Euro Area, Oxford Bulletin of Economics and Statistics
 #'
-#'@seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}} or \code{\link{id.cv}}
+#'@seealso \code{\link{id.cvm}}, \code{\link{id.dc}}, \code{\link{id.ngml}}, \code{\link{id.cv} or \code{\link{id.st}}
 #'
 #' @examples
 #' \donttest{
@@ -141,20 +141,30 @@ wild.boot <- function(x, rademacher = TRUE, horizon, nboot, nc = 1, dd = NULL, s
     if(x$method == "Non-Gaussian maximum likelihood"){
       temp <- id.ngml_boot(varb, stage3 = x$stage3, Z = Z)
     }else if(x$method == "Changes in Volatility"){
-      temp <- tryCatch(id.cv_boot(varb, SB = x$SB, Z = Z), error = function(e) NULL)
+      temp <- tryCatch(id.cv_boot(varb, SB = x$SB, Z = Z, restriction_matrix = x$restriction_matrix),
+                       error = function(e) NULL)
     }else if(x$method == "Cramer-von Mises distance"){
       temp <- id.cvm(varb, itermax = itermax, steptol = steptol, iter2 = iter2, dd)
-    }else{
+    }else if(x$method == "Distance covariances"){
       temp <- id.dc(varb, PIT=x$PIT)
+    }else{
+      temp <- tryCatch(id.st_boot(varb, c_fix = x$est_c, transition_variable = x$transition_variable, restriction_matrix = x$restriction_matrix,
+                    gamma_fix = x$est_g, max.iter = x$iteration, crit = 0.01, Z = Z),
+                    error = function(e) NULL)
     }
 
     if(!is.null(temp)){
     Pstar <- temp$B
 
-     Pstar1 <- sqrt.f(Pstar, Sigma_u_star)
-     diag_sigma_root <- diag(diag(suppressMessages(sqrtm(Sigma_u_hat_old))))
+    if(!is.null(x$restriction_matrix)){
+      Pstar1 <- Pstar
+      frobP <- frobICA_mod(Pstar1, B, standardize=TRUE)
+    }else{
+      Pstar1 <- sqrt.f(Pstar, Sigma_u_star)
+      diag_sigma_root <- diag(diag(suppressMessages(sqrtm(Sigma_u_hat_old))))
 
-     frobP <- frobICA_mod(t(solve(diag_sigma_root)%*%Pstar1), t(solve(diag_sigma_root)%*%B), standardize=TRUE)
+      frobP <- frobICA_mod(t(solve(diag_sigma_root)%*%Pstar1), t(solve(diag_sigma_root)%*%B), standardize=TRUE)
+    }
      Pstar <- Pstar1%*%frobP$perm
      temp$B <- Pstar
 
@@ -198,55 +208,61 @@ wild.boot <- function(x, rademacher = TRUE, horizon, nboot, nc = 1, dd = NULL, s
   rownames(boot.mean) <- rownames(x$B)
 
   # Checking for signs
-  if(is.null(signrest)){
-    sign.mat <- matrix(FALSE, nrow = k, ncol = k)
-    sign.complete <- 0
-    sign.part <- rep(0, times = k)
-
-    for(i in 1:length(bootstraps)){
-
-      pBs <- permutation(Bs[,,i])
-      sign.mat <-lapply(pBs, function(z){sapply(1:k, function(ii){all(z[,ii]/abs(z[,ii])  == x$B[,ii]/abs(x$B[,ii])) | all(z[,ii]/abs(z[,ii])  == x$B[,ii]/abs(x$B[,ii])*(-1))})})
-
-      if(any(unlist(lapply(sign.mat, function(sign.mat)all(sign.mat == TRUE))))){
-        sign.complete <- sign.complete + 1
-      }
-
-      for(j in 1:k){
-        check <- rep(FALSE, k)
-        for(l in 1:k){
-          check[l] <- any(all(pBs[[1]][,l]/abs(pBs[[1]][,l]) == x$B[,j]/abs(x$B)[,j]) | all(pBs[[1]][,l]/abs(pBs[[1]][,l]) == x$B[,j]/abs(x$B)[,j]*(-1)))
-        }
-        if(sum(check) == 1){
-          sign.part[[j]] <- sign.part[[j]] + 1
-        }
-      }
+  if(!is.null(x$restriction_matrix)){
+    if(!is.null(signrest)){
+      cat('Testing signs only possible for unrestricted model \n')
     }
+    sign.part <- NULL
+    sign.complete <- NULL
   }else{
-    nrest <- length(signrest)
-    sign.part <- rep(list(0), nrest )
-    sign.complete <- 0
-    for(j in 1:length(bootstraps)){
-      check.full <- 0
-      for(i in 1:nrest){
-        check <- rep(FALSE, length(signrest[[i]][!is.na(signrest[[i]])]))
-        for(l in 1:k){
-          check[l] <- any(all(Bs[!is.na(signrest[[i]]),l,j]/abs(Bs[!is.na(signrest[[i]]),l,j]) == signrest[[i]][!is.na(signrest[[i]])]) |
-                            all(Bs[!is.na(signrest[[i]]),l,j]/abs(Bs[!is.na(signrest[[i]]),l,j]) == signrest[[i]][!is.na(signrest[[i]])]*(-1)))
+    if(is.null(signrest)){
+      sign.mat <- matrix(FALSE, nrow = k, ncol = k)
+      sign.complete <- 0
+      sign.part <- rep(0, times = k)
+
+      for(i in 1:length(bootstraps)){
+
+        pBs <- permutation(Bs[,,i])
+        sign.mat <-lapply(pBs, function(z){sapply(1:k, function(ii){all(z[,ii]/abs(z[,ii])  == x$B[,ii]/abs(x$B[,ii])) | all(z[,ii]/abs(z[,ii])  == x$B[,ii]/abs(x$B[,ii])*(-1))})})
+
+        if(any(unlist(lapply(sign.mat, function(sign.mat)all(sign.mat == TRUE))))){
+          sign.complete <- sign.complete + 1
         }
-        if(sum(check) == 1){
-          sign.part[[i]] <- sign.part[[i]] + 1
-          check.full <- check.full + 1
+
+        for(j in 1:k){
+          check <- rep(FALSE, k)
+          for(l in 1:k){
+            check[l] <- any(all(pBs[[1]][,l]/abs(pBs[[1]][,l]) == x$B[,j]/abs(x$B)[,j]) | all(pBs[[1]][,l]/abs(pBs[[1]][,l]) == x$B[,j]/abs(x$B)[,j]*(-1)))
+          }
+          if(sum(check) == 1){
+            sign.part[[j]] <- sign.part[[j]] + 1
+          }
         }
       }
-      if(check.full == nrest){
-        sign.complete <- sign.complete + 1
+    }else{
+      nrest <- length(signrest)
+      sign.part <- rep(list(0), nrest )
+      sign.complete <- 0
+      for(j in 1:length(bootstraps)){
+        check.full <- 0
+        for(i in 1:nrest){
+          check <- rep(FALSE, length(signrest[[i]][!is.na(signrest[[i]])]))
+          for(l in 1:k){
+            check[l] <- any(all(Bs[!is.na(signrest[[i]]),l,j]/abs(Bs[!is.na(signrest[[i]]),l,j]) == signrest[[i]][!is.na(signrest[[i]])]) |
+                              all(Bs[!is.na(signrest[[i]]),l,j]/abs(Bs[!is.na(signrest[[i]]),l,j]) == signrest[[i]][!is.na(signrest[[i]])]*(-1)))
+          }
+          if(sum(check) == 1){
+            sign.part[[i]] <- sign.part[[i]] + 1
+            check.full <- check.full + 1
+          }
+        }
+        if(check.full == nrest){
+          sign.complete <- sign.complete + 1
+        }
       }
+      names(sign.part) <- names(signrest)
     }
-    names(sign.part) <- names(signrest)
   }
-
-
 
   ## Impulse response of actual model
   ip <- imrf(x, horizon = horizon)
