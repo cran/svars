@@ -27,9 +27,9 @@ in the corresponding format (see examples) or common time parameters need to be 
 
 \item{max.iter}{Integer. Number of maximum GLS iterations}
 
-\item{crit}{Integer. Critical value for the precision of the GLS estimation}
+\item{crit}{Numeric. Critical value for the precision of the GLS estimation}
 
-\item{restriction_matrix}{Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated)}
+\item{restriction_matrix}{Matrix or vector. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*J (or J*K^2) matrix can be passed, where J is the number of restrictions and K the number of time series. (as suggested in Luetkepohl, 2017, section 5.2.1).}
 }
 \value{
 A list of class "svars" with elements
@@ -44,7 +44,7 @@ A list of class "svars" with elements
 \item{iteration}{Number of GLS estimations}
 \item{method}{Method applied for identification}
 \item{SB}{Structural break (number of observations)}
-\item{A_hat}{Estimated VAR paramter via GLS}
+\item{A_hat}{Estimated VAR parameter via GLS}
 \item{type}{Type of the VAR model, e.g. 'const'}
 \item{SBcharacter}{Structural break (date; if provided in function arguments)}
 \item{restrictions}{Number of specified restrictions}
@@ -61,8 +61,7 @@ Matrix B corresponds to the decomposition of the pre-break covariance matrix \eq
 The post-break covariance corresponds to \eqn{\Sigma_2=B\Lambda B'} where \eqn{\Lambda} is the estimated unconditional heteroskedasticity matrix.
 }
 \examples{
-\donttest{
-# data contains quartlery observations from 1965Q1 to 2008Q2
+#' # data contains quartlery observations from 1965Q1 to 2008Q2
 # assumed structural break in 1979Q3
 # x = output gap
 # pi = inflation
@@ -87,6 +86,11 @@ restMat[1,3] <- 0
 x2 <- id.cv(v1, SB = 59, restriction_matrix = restMat)
 summary(x2)
 
+# In alternative Form
+restMat <- c(rep(0,6), 1, 0,0)
+x2 <- id.cv(v1, SB = 59, restriction_matrix = restMat)
+summary(x2)
+
 #Structural brake via Dates
 # given that time series vector with dates is available
 dateVector = seq(as.Date("1965/1/1"), as.Date("2008/7/1"), "quarter")
@@ -102,7 +106,6 @@ summary(x4)
 x5 <- id.cv(v1, SB = c(1979, 3))
 summary(x5)
 
-}
 }
 \references{
 Rigobon, R., 2003. Identification through Heteroskedasticity. The Review of Economics and Statistics, 85, 777-792.\cr
