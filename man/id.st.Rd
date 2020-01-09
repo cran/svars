@@ -2,12 +2,25 @@
 % Please edit documentation in R/id.st.R
 \name{id.st}
 \alias{id.st}
-\title{Identification of SVAR models by means of a smooth transition of volatility}
+\title{Identification of SVAR models by means of a smooth transition (ST) in covariance}
 \usage{
-id.st(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL,
-  transition_variable = NULL, gamma_lower = -3, gamma_upper = 2,
-  gamma_step = 0.5, gamma_fix = NULL, nc = 1, max.iter = 5,
-  crit = 0.001, restriction_matrix = NULL, lr_test = FALSE)
+id.st(
+  x,
+  c_lower = 0.3,
+  c_upper = 0.7,
+  c_step = 5,
+  c_fix = NULL,
+  transition_variable = NULL,
+  gamma_lower = -3,
+  gamma_upper = 2,
+  gamma_step = 0.5,
+  gamma_fix = NULL,
+  nc = 1,
+  max.iter = 5,
+  crit = 0.001,
+  restriction_matrix = NULL,
+  lr_test = FALSE
+)
 }
 \arguments{
 \item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object}
@@ -72,6 +85,7 @@ A list of class "svars" with elements
 \item{restriction_matrix}{Specified restriction matrix}
 \item{lr_test}{Logical, whether a likelihood ratio test is performed}
 \item{lRatioTest}{Results of likelihood ratio test}
+\item{VAR}{Estimated input VAR object}
 }
 \description{
 Given an estimated VAR model, this function uses a smooth transition in the covariance to identify the structural impact matrix B of the corresponding SVAR model

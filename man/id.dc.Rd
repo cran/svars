@@ -2,7 +2,7 @@
 % Please edit documentation in R/id.dc.R
 \name{id.dc}
 \alias{id.dc}
-\title{Independence-based identification of SVAR models based on distance covariances}
+\title{Independence-based identification of SVAR models build on distance covariances (DC) statistic}
 \usage{
 id.dc(x, PIT = FALSE)
 }
@@ -22,6 +22,7 @@ A list of class "svars" with elements
 \item{p}{Number of lags}
 \item{K}{Dimension of the VAR}
 \item{PIT}{Logical, if PIT is used}
+\item{VAR}{Estimated input VAR object}
 }
 \description{
 Given an estimated VAR model, this function applies independence-based identification for the structural impact matrix B of the corresponding SVAR model

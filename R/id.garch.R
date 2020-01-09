@@ -1,4 +1,4 @@
-#' GARCH identification of SVAR models
+#' Identification of SVAR models through patterns of GARCH
 #'
 #' Given an estimated VAR model, this function uses GARCH-type variances to identify the structural impact matrix B of the corresponding SVAR model
 #' \deqn{y_t=c_t+A_1 y_{t-1}+...+A_p y_{t-p}+u_t
@@ -26,8 +26,9 @@
 #' \item{y}{Data matrix}
 #' \item{p}{Number of lags}
 #' \item{K}{Dimension of the VAR}
+#' \item{VAR}{Estimated input VAR object}
 #'
-#' @references Normadin, M. & Phaneuf, L., 2004. Monetary Policy Shocks: Testing Identification Conditionsunder Time-Varying Conditional Volatility. Journal of Monetary Economics, 51(6), 1217-1243.\cr
+#' @references Normadin, M. & Phaneuf, L., 2004. Monetary Policy Shocks: Testing Identification Conditions under Time-Varying Conditional Volatility. Journal of Monetary Economics, 51(6), 1217-1243.\cr
 #'  Lanne, M. & Saikkonen, P., 2007. A Multivariate Generalized Orthogonal Factor GARCH Model. Journal of Business & Economic Statistics, 25(1), 61-75.
 #'
 #' @seealso For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.cvm}}, \code{\link{id.cv}}, \code{\link{id.dc}} or \code{\link{id.ngml}}
@@ -69,6 +70,14 @@ id.garch <- function(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL){
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
   get_var_objects(x)
 
+  # check if varest object is restricted
+  if(inherits(x,"varest")){
+    if(!is.null(x$restrictions)){
+      stop("id.garch currently supports identification of unrestricted VARs only. Consider using id.dc, id.cvm or id.chol instead.")
+    }
+  }
+
+  # set up restrictions paassed by user
 
   restriction_matrix = get_restriction_matrix(restriction_matrix, k)
   restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
@@ -117,6 +126,9 @@ id.garch <- function(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL){
     result <- identifyGARCH(B0 = B0, k = k, Tob = Tob, restriction_matrix = restriction_matrix, Sigma_e_univ = Sigma_e_univ, coef_x = coef_x, x = x,
                             parameter_ini_univ = parameter_ini_univ, max.iter = max.iter, crit = crit, u = u, p = p, yOut = yOut, type = type)
   }
+  result$AIC <- (-2) * result$Lik + 2*(k + p * k^2 + (k + 1) * k + 1)
+  result$VAR <- x
+
   class(result) <- "svars"
 
   return(result)

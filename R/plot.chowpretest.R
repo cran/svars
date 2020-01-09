@@ -1,5 +1,6 @@
 #' @import ggplot2
-#' @S3method plot chowpretest
+#' @method plot chowpretest
+#' @export
 
 plot.chowpretest <- function(x, ...){
 

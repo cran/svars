@@ -2,11 +2,20 @@
 % Please edit documentation in R/id.cv.R
 \name{id.cv}
 \alias{id.cv}
-\title{Changes in volatility identification of SVAR models}
+\title{Identification of SVAR models based on Changes in volatility (CV)}
 \usage{
-id.cv(x, SB, start = NULL, end = NULL, frequency = NULL,
-  format = NULL, dateVector = NULL, max.iter = 50, crit = 0.001,
-  restriction_matrix = NULL)
+id.cv(
+  x,
+  SB,
+  start = NULL,
+  end = NULL,
+  frequency = NULL,
+  format = NULL,
+  dateVector = NULL,
+  max.iter = 50,
+  crit = 0.001,
+  restriction_matrix = NULL
+)
 }
 \arguments{
 \item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object}
@@ -52,6 +61,7 @@ A list of class "svars" with elements
 \item{y}{Data matrix}
 \item{p}{Number of lags}
 \item{K}{Dimension of the VAR}
+\item{VAR}{Estimated input VAR object}
 }
 \description{
 Given an estimated VAR model, this function applies changes in volatility to identify the structural impact matrix B of the corresponding SVAR model

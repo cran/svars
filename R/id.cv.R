@@ -1,4 +1,4 @@
-#' Changes in volatility identification of SVAR models
+#' Identification of SVAR models based on Changes in volatility (CV)
 #'
 #' Given an estimated VAR model, this function applies changes in volatility to identify the structural impact matrix B of the corresponding SVAR model
 #' \deqn{y_t=c_t+A_1 y_{t-1}+...+A_p y_{t-p}+u_t
@@ -38,6 +38,7 @@
 #' \item{y}{Data matrix}
 #' \item{p}{Number of lags}
 #' \item{K}{Dimension of the VAR}
+#' \item{VAR}{Estimated input VAR object}
 #'
 #' @references Rigobon, R., 2003. Identification through Heteroskedasticity. The Review of Economics and Statistics, 85, 777-792.\cr
 #'  Herwartz, H. & Ploedt, M., 2016. Simulation Evidence on Theory-based and Statistical Identification under Volatility Breaks Oxford Bulletin of Economics and Statistics, 78, 94-112.
@@ -111,7 +112,14 @@ id.cv <- function(x, SB, start = NULL, end = NULL, frequency = NULL,
 
 u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
 get_var_objects(x)
+# check if varest object is restricted
+if(inherits(x,"varest")){
+  if(!is.null(x$restrictions)){
+    stop("id.cv currently supports identification of unrestricted VARs only. Consider using id.dc, id.cvm or id.chol instead.")
+  }
+}
 
+# set up restrictions passed by user
 rmOut = restriction_matrix
 restriction_matrix <- get_restriction_matrix(restriction_matrix, k)
 
@@ -230,7 +238,7 @@ y <- y[, -c(1:p)]
       coef_x <- t(coef(x))
 
       if(inherits(x, "VECM")){
-        coef_x <- t(VARrep(x))
+        coef_x <- t(tsDyn::VARrep(x))
       }
 
       if(rownames(coef_x)[1] %in% c("Intercept", "constant")){
@@ -325,7 +333,9 @@ y <- y[, -c(1:p)]
     y = yOut,                # Data
     p = unname(p),                # number of lags
     K = k,# number of time series
-    lRatioTest = lRatioTest
+    lRatioTest = lRatioTest,
+    AIC = (-2) * best_estimation$Lik + 2*(k + p * k^2 + (k + 1) * k + 1),
+    VAR = x
   )
   class(result) <- "svars"
  return(result)

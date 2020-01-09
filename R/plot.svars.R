@@ -1,5 +1,6 @@
 #' @import ggplot2
-#' @S3method plot svars
+#' @method plot svars
+#' @export
 
 plot.svars <- function(x, ...){
   if(x$method != 'Smooth transition'){

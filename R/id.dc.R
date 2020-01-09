@@ -1,4 +1,4 @@
-#' Independence-based identification of SVAR models based on distance covariances
+#' Independence-based identification of SVAR models build on distance covariances (DC) statistic
 #'
 #'Given an estimated VAR model, this function applies independence-based identification for the structural impact matrix B of the corresponding SVAR model
 #' \deqn{y_t=c_t+A_1 y_{t-1}+...+A_p y_{t-p}+u_t  =c_t+A_1 y_{t-1}+...+A_p y_{t-p}+B \epsilon_t.}
@@ -17,6 +17,7 @@
 #' \item{p}{Number of lags}
 #' \item{K}{Dimension of the VAR}
 #' \item{PIT}{Logical, if PIT is used}
+#' \item{VAR}{Estimated input VAR object}
 #'
 #' @seealso For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.garch}}, \code{\link{id.cvm}}, \code{\link{id.cv}} or \code{\link{id.ngml}}
 #'
@@ -75,45 +76,61 @@ id.dc <- function(x, PIT = FALSE){
   if(inherits(x, "var.boot")){
     A_hat <- coef_x
   }else{
-    A <- matrix(0, nrow = k, ncol = k * p)
-    for(i in 1:k){
-      A[i,] <- coef_x[[i]][1:(k * p),1]
-    }
-
-    A_hat <- A
-
-    if(type == "const"){
-      v <- rep(1, k)
-
-      for(i in 1:k){
-        v[i] <- coef_x[[i]][(k*p+1), 1]
-      }
-
-      A_hat <- cbind(v, A)
-    }else if (type == "trend"){
-      trend <- rep(1, k)
-
-      for(i in 1:k){
-        trend[i] <- coef_x[[i]][(k*p+1), 1]
-      }
-
-      A_hat <- cbind(trend, A)
-    }else if(type == "both"){
-      v <- rep(1, k)
-
-      for(i in 1:k){
-        v[i] <- coef_x[[i]][(k*p+1), 1]
-      }
-
-      trend <- rep(1, k)
-
-      for(i in 1:k){
-        trend[i] <- coef_x[[i]][(k*p+2), 1]
-      }
-
-      A_hat <- cbind(v, trend, A)
+    if(type == "none"){
+      A_hat <- vars::Bcoef(x)
+    }else{
+    A_hat <- vars::Bcoef(x)[, c((k * p+1):ncol(vars::Bcoef(x)),1:(k * p))]
     }
   }
+
+
+  #   if(inherits(x, "var.boot")){
+  #     A_hat <- coef_x
+  #   }else{
+  #     A <- matrix(0, nrow = k, ncol = k * p)
+  #     #A_hat <- vars::Bcoef(x)[, c((k * p+1):ncol(vars::Bcoef(x)),1:(k * p))]
+  #     for(i in 1:k){
+  #       A[i,] <- coef_x[[i]][1:(k * p),1]
+  #     }
+  #
+  #     A_hat <- A
+  #   if(type == "const"){
+  #     v <- rep(1, k)
+  #
+  #     for(i in 1:k){
+  #       v[i] <- coef_x[[i]][(k*p+1), 1]
+  #     }
+  #
+  #     A_hat <- cbind(v, A)
+  #   }else if (type == "trend"){
+  #     trend <- rep(1, k)
+  #
+  #     for(i in 1:k){
+  #       trend[i] <- coef_x[[i]][(k*p+1), 1]
+  #     }
+  #
+  #     A_hat <- cbind(trend, A)
+  #   }else if(type == "both"){
+  #     v <- rep(1, k)
+  #
+  #     for(i in 1:k){
+  #       v[i] <- coef_x[[i]][(k*p+1), 1]
+  #     }
+  #
+  #     trend <- rep(1, k)
+  #
+  #     for(i in 1:k){
+  #       trend[i] <- coef_x[[i]][(k*p+2), 1]
+  #     }
+  #
+  #     A_hat <- cbind(v, trend, A)
+  #   }
+  # }
+
+
+
+
+
 
   result <- list(B = P,       # estimated B matrix (unique decomposition of the covariance matrix)
               A_hat = A_hat,  # estimated VAR parameter
@@ -123,7 +140,8 @@ id.dc <- function(x, PIT = FALSE){
               y = yOut,       # Data
               p = unname(p),  # number of lags
               K = k,          # number of time series
-              PIT=PIT         #
+              PIT=PIT,        #
+              VAR = x
               )
   class(result) <- "svars"
   return(result)

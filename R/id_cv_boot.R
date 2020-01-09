@@ -4,6 +4,16 @@ id.cv_boot <- function(x, SB, max.iter = 50, crit = 0.001, restriction_matrix = 
  get_var_objects(x)
 
  rmOut = restriction_matrix
+
+ # check if varest object is restricted
+ if(inherits(x,"varest")){
+   if(!is.null(x$restrictions)){
+     stop("id.cv currently supports identification of unrestricted VARs only. Consider using id.dc, id.cvm or id.chol instead.")
+   }
+ }
+
+ # set up restrictions paassed by user
+
  restriction_matrix <- get_restriction_matrix(restriction_matrix, k)
  restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
   if(is.numeric(SB)){
@@ -95,7 +105,7 @@ if(is.null(best_estimation$A_hat)){
     coef_x <- t(coef(x))
 
     if(inherits(x, "VECM")){
-      coef_x <- t(VARrep(x))
+      coef_x <- t(tsDyn::VARrep(x))
     }
 
     if(rownames(coef_x)[1] %in% c("Intercept", "constant")){
@@ -191,7 +201,8 @@ result <- list(
   y = yOut,                # Data
   p = unname(p),                # number of lags
   K = k,# number of time series
-  lRatioTest = lRatioTest
+  lRatioTest = lRatioTest,
+  VAR = x
 )
 
   class(result) <- "svars"

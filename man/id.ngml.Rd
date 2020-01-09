@@ -2,7 +2,7 @@
 % Please edit documentation in R/id.ngml.R
 \name{id.ngml}
 \alias{id.ngml}
-\title{Non-Gaussian maximum likelihood identification of SVAR models}
+\title{Non-Gaussian maximum likelihood (NGML) identification of SVAR models}
 \usage{
 id.ngml(x, stage3 = FALSE, restriction_matrix = NULL)
 }
@@ -34,6 +34,7 @@ A list of class "svars" with elements
 \item{restrictions}{Number of specified restrictions}
 \item{restriction_matrix}{Specified restriction matrix}
 \item{stage3}{Logical, whether Stage 3 is performed}
+\item{VAR}{Estimated input VAR object}
 }
 \description{
 Given an estimated VAR model, this function applies identification by means of a non-Gaussian likelihood for the structural impact matrix B of the corresponding SVAR model

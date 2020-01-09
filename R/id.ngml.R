@@ -1,4 +1,4 @@
-#' Non-Gaussian maximum likelihood identification of SVAR models
+#' Non-Gaussian maximum likelihood (NGML) identification of SVAR models
 #'
 #' Given an estimated VAR model, this function applies identification by means of a non-Gaussian likelihood for the structural impact matrix B of the corresponding SVAR model
 #' \deqn{y_t=c_t+A_1 y_{t-1}+...+A_p y_{t-p}+u_t   =c_t+A_1 y_{t-1}+...+A_p y_{t-p}+B \epsilon_t.}
@@ -28,6 +28,7 @@
 #' \item{restrictions}{Number of specified restrictions}
 #' \item{restriction_matrix}{Specified restriction matrix}
 #' \item{stage3}{Logical, whether Stage 3 is performed}
+#' \item{VAR}{Estimated input VAR object}
 #'
 #'@references Lanne, M., Meitz, M., Saikkonen, P., 2017. Identification and estimation of non-Gaussian structural vector autoregressions. J. Econometrics 196 (2), 288-304.\cr
 #'Comon, P., 1994. Independent component analysis, A new concept?, Signal Processing, 36, 287-314
@@ -52,7 +53,6 @@
 #' i1 <- irf(x1, n.ahead = 30)
 #' plot(i1, scales = 'free_y')
 #'
-#' @importFrom tsDyn VARrep
 #' @export
 
 
@@ -65,6 +65,15 @@ id.ngml <- function(x, stage3 = FALSE, restriction_matrix = NULL){
   u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
   get_var_objects(x)
   rmOut = restriction_matrix
+
+  # check if varest object is restricted
+  if(inherits(x,"varest")){
+    if(!is.null(x$restrictions)){
+      stop("id.ngml currently supports identification of unrestricted VARs only. Consider using id.dc, id.cvm or id.chol instead.")
+    }
+  }
+
+  # set up restrictions paassed by user
   restriction_matrix = get_restriction_matrix(restriction_matrix, k)
   restrictions <- length(restriction_matrix[!is.na(restriction_matrix)])
 
@@ -92,6 +101,8 @@ id.ngml <- function(x, stage3 = FALSE, restriction_matrix = NULL){
   }
 
   result$restriction_matrix = rmOut
+  result$AIC <- (-2) * result$Lik + 2*(k + p * k^2 + (k + 1) * k + 1)
+  result$VAR <- x
 
   class(result) <- "svars"
   return(result)
