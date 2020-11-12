@@ -11,7 +11,7 @@
 #' \item{B}{Estimated structural impact matrix B, i.e. unique decomposition of the covariance matrix of reduced form residuals}
 #' \item{n}{Number of observations}
 #' \item{method}{Method applied for identification}
-#' \item{order_k}{Ordering of the variables as assumed for recursive causalitiy}
+#' \item{order_k}{Ordering of the variables as assumed for recursive causality}
 #' \item{A_hat}{Estimated VAR parameter}
 #' \item{type}{Type of the VAR model, e.g. 'const'}
 #' \item{y}{Data matrix}
@@ -55,7 +55,7 @@
 
 id.chol <- function(x, order_k = NULL){
   # define
-  u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
+  u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <- A_hat <-  NULL
   get_var_objects(x)
   names_k <- colnames(yOut)
   sigg <- crossprod(u) / (Tob- 1 - k * p)
@@ -78,15 +78,15 @@ id.chol <- function(x, order_k = NULL){
   rownames(B) <- names_k
 
   # obtaining VAR parameter
-  if(inherits(x, "var.boot")){
-    A_hat <- coef_x
-  }else{
-    if(type == "none"){
-      A_hat <- vars::Bcoef(x)
-    }else{
-      A_hat <- vars::Bcoef(x)[, c((k * p+1):ncol(vars::Bcoef(x)),1:(k * p))]
-    }
-  }
+  # if(inherits(x, "var.boot")){
+  #   A_hat <- coef_x
+  # }else{
+  #   if(type == "none"){
+  #     A_hat <- vars::Bcoef(x)
+  #   }else{
+  #     A_hat <- vars::Bcoef(x)[, c((k * p+1):ncol(vars::Bcoef(x)),1:(k * p))]
+  #   }
+  # }
 
   # return result
   result <- list(B = B,          # estimated B matrix (unique decomposition of the covariance matrix)

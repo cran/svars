@@ -86,6 +86,14 @@
 #' summary(x1)
 #' plot(x1)
 #'
+#' # Using a lagged endogenous transition variable
+#' # In this example inflation with two lags
+#' inf <- LN[-c(1, 449, 450), 2]*(1/sd(LN[-c(1, 449, 450), 2]))
+#  #Re-estimation with new transition variable, location and shape parameter
+#' x1_inf <- id.st(v1, c_fix = 4.41, gamma_fix = 0.49, transition_variable = inf)
+#' summary(x1_inf)
+#' plot(x1_inf)
+#'
 #' }
 #' @importFrom steadyICA steadyICA
 #' @export
@@ -95,7 +103,7 @@ id.st <- function(x, c_lower = 0.3, c_upper = 0.7, c_step = 5, c_fix = NULL, tra
                   max.iter = 5, crit = 0.001, restriction_matrix = NULL, lr_test = FALSE){
 
   # Gathering information from reduced form model
-  u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  NULL
+  u <- Tob <- p <- k <- residY <- coef_x <- yOut <- type <- y <-  A_hat <- NULL
   get_var_objects(x)
 
   # check if varest object is restricted
