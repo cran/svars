@@ -1,4 +1,4 @@
-41d0431d8b123e43ab7ff27a7bb5aa2e *DESCRIPTION
+a0fc26cb72947b0c2605f38458203c9b *DESCRIPTION
 75338d298e59b479a49bfc0af6c68f86 *LICENSE
 5809f3a8101b63b6019d01f9bb5120a0 *NAMESPACE
 a207afe60a90631307acf3a2e5fa88ba *R/RcppExports.R
@@ -58,7 +58,7 @@ d8fd45357618367092f214adfd3b059b *data/LN.rda
 5a2584d81973bf3e13ed929728ab58d7 *data/USA.RData
 5d0375dcc761a2cbce8f1c7f82a2db48 *inst/CITATION
 6df373f4b5b5b375e086655f95c06f8b *inst/doc/svars.Rnw
-51377c8caf123da0d4c91243c212e8c0 *inst/doc/svars.pdf
+16ae2b3ce0e2c28154d02583b2ac705d *inst/doc/svars.pdf
 5c4451a29a81e62fc1b838f49ead1efe *man/LN.Rd
 354c0e4f9773eb87c713dde748b6b9d9 *man/USA.Rd
 0c175a5ee00e8b4631ce2a34e462515c *man/ba.boot.Rd
@@ -107,7 +107,7 @@ b2414a5c18c747687e93789af846e22c *tests/testthat/test-id_cvm.R
 19767647fe001f74de26cec9465ca9f9 *tests/testthat/test-id_dc.R
 2ab1848f07facfe88c99df3cd786a373 *tests/testthat/test-id_ngml.R
 e03f691974cf4ea192f4ca100f918fcc *tests/testthat/test-input_object_classes.R
-e66170b35ad246e1a4af57c1b7002009 *tests/testthat/test-irf.R
+3d6778cee6ec4db6769c64aae5715e74 *tests/testthat/test-irf.R
 318f347b88fd28821befe4a08300be92 *tests/testthat/test-likelihood_GARCH.R
 08dfb3ef04fa2332843f761382e5ba48 *tests/testthat/test-likelihood_cv.R
 dcf303ab8a210eaae2f6826662d56146 *tests/testthat/test-likelihood_ngml.R
