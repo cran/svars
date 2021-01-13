@@ -1,4 +1,4 @@
-a0fc26cb72947b0c2605f38458203c9b *DESCRIPTION
+b2293cc64d703b73c91a491d21ae377c *DESCRIPTION
 75338d298e59b479a49bfc0af6c68f86 *LICENSE
 5809f3a8101b63b6019d01f9bb5120a0 *NAMESPACE
 a207afe60a90631307acf3a2e5fa88ba *R/RcppExports.R
@@ -6,7 +6,7 @@ a207afe60a90631307acf3a2e5fa88ba *R/RcppExports.R
 6f180e0cae02885f0e9e5f6057db827b *R/boot_after_boot.R
 d258a2b4d87bb956768e934765e81847 *R/bootstrap_mb.R
 c066540c88472b52d19620ea91639f0b *R/bootstrap_wild.R
-dd1f88779e99d414b9d1981069cb03ee *R/cf.R
+c78e2b80a3738b6c6aa72754f24bfcf2 *R/cf.R
 3ffa94ac79093172a4a895bb858412f0 *R/chow.test.R
 9a4dd4b6da43505673467f04b84be180 *R/fevd.svars.R
 9547d3284ff393a76a4a28a8b190d358 *R/frobICA_mod.R
@@ -58,7 +58,7 @@ d8fd45357618367092f214adfd3b059b *data/LN.rda
 5a2584d81973bf3e13ed929728ab58d7 *data/USA.RData
 5d0375dcc761a2cbce8f1c7f82a2db48 *inst/CITATION
 6df373f4b5b5b375e086655f95c06f8b *inst/doc/svars.Rnw
-16ae2b3ce0e2c28154d02583b2ac705d *inst/doc/svars.pdf
+a68a7d84039d87f1926de6f304bb7013 *inst/doc/svars.pdf
 5c4451a29a81e62fc1b838f49ead1efe *man/LN.Rd
 354c0e4f9773eb87c713dde748b6b9d9 *man/USA.Rd
 0c175a5ee00e8b4631ce2a34e462515c *man/ba.boot.Rd
@@ -98,6 +98,7 @@ fe1ede6c5728b6b9a0b3040dd01516a1 *src/SmoothTransition.cpp
 3a93659a158524c1276b389734e3707a *src/YLagCr.cpp
 d4f9e50a4d2c6674a0bb0cd3a097d4b4 *tests/testthat.R
 f8bf0837b4ee5782ff1e8d6d10b999d8 *tests/testthat/test-ba_boot.R
+25fd9329b9b0695f01817420bb5dff3c *tests/testthat/test-cf.R
 fd218f6e4915e483ee1f8ba075eecde0 *tests/testthat/test-get_restriction_matrix.R
 c9fda2c4ffb0fe783a7dc0674e3ed69f *tests/testthat/test-id.garch.R
 c8da029ee10f3a8a1760e6e20c057dce *tests/testthat/test-id.st.R
