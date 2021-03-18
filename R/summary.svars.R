@@ -17,12 +17,28 @@ summary.svars <- function(object, ...){
   cat(svarsObject$AIC)
 }
   if(svarsObject$method ==  "Changes in Volatility"){
-  cat("\nStructural Break: At Observation Number ")
- cat(svarsObject$SB)
-  if(!is.null(svarsObject$SBcharacter)){
-    cat(" during ")
-    cat(svarsObject$SBcharacter)
-  }
+    if(is.null(svarsObject$SB2)) {
+      cat("\nStructural Break: At Observation Number ")
+      cat(svarsObject$SB)
+      if(!is.null(svarsObject$SBcharacter)){
+        cat(" during ")
+        cat(svarsObject$SBcharacter)
+      }
+    } else {
+      cat("\nFirst structural Break: At Observation Number ")
+      cat(svarsObject$SB)
+      if(!is.null(svarsObject$SBcharacter)){
+        cat(" during ")
+        cat(svarsObject$SBcharacter)
+      }
+      cat("\nSecond structural Break: At Observation Number ")
+      cat(svarsObject$SB2)
+      if(!is.null(svarsObject$SBcharacter2)){
+        cat(" during ")
+        cat(svarsObject$SBcharacter2)
+      }
+    }
+
  cat("\nNumber of GLS estimations: ")
  cat(svarsObject$iteration)
  cat("\nNumber of Restrictions: ")
@@ -32,12 +48,22 @@ summary.svars <- function(object, ...){
  print(svarsObject$Lambda)
  cat("\nStandard Errors of Lambda:\n")
  print(svarsObject$Lambda_SE)
+ if(!is.null(svarsObject$SB2)) {
+   cat("\nSecond estimated unconditional Heteroscedasticity Matrix (Lambda2):\n")
+   print(svarsObject$Lambda2)
+   cat("\nStandard Errors of second Lambda:\n")
+   print(svarsObject$Lambda2_SE)
+ }
  cat("\nEstimated B Matrix (unique decomposition of the covariance matrix): \n")
  print(svarsObject$B)
  cat("\nStandard Errors of B:\n")
  print(svarsObject$B_SE)
  cat("\nPairwise Wald Test:\n")
  printCoefmat(svarsObject$wald_statistic, has.Pvalue = T)
+ if(!is.null(svarsObject$SB2)){
+   cat("\nPairwise Wald Test for second Lambda:\n")
+   printCoefmat(svarsObject$wald_statistic2, has.Pvalue = T)
+ }
    if(svarsObject$restrictions > 0){
      cat("\nLikelihood Ratio Test: \n")
      #cat(svarsObject$lRatioTestStatistic)
