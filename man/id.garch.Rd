@@ -4,7 +4,13 @@
 \alias{id.garch}
 \title{Identification of SVAR models through patterns of GARCH}
 \usage{
-id.garch(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL)
+id.garch(
+  x,
+  max.iter = 5,
+  crit = 0.001,
+  restriction_matrix = NULL,
+  start_iter = 50
+)
 }
 \arguments{
 \item{x}{An object of class 'vars', 'vec2var', 'nlVar'. Estimated VAR object}
@@ -14,6 +20,8 @@ id.garch(x, max.iter = 5, crit = 0.001, restriction_matrix = NULL)
 \item{crit}{Numeric. Critical value for the precision of the iterative procedure}
 
 \item{restriction_matrix}{Matrix. A matrix containing presupposed entries for matrix B, NA if no restriction is imposed (entries to be estimated). Alternatively, a K^2*K^2 matrix can be passed, where ones on the diagonal designate unrestricted and zeros restricted coefficients. (as suggested in Luetkepohl, 2017, section 5.2.1).}
+
+\item{start_iter}{Numeric. Number of random candidate initial values for univariate GRACH(1,1) optimization.}
 }
 \value{
 A list of class "svars" with elements
@@ -34,6 +42,7 @@ A list of class "svars" with elements
 \item{p}{Number of lags}
 \item{K}{Dimension of the VAR}
 \item{VAR}{Estimated input VAR object}
+\item{I_test}{Results of a series of sequential tests on the number of heteroskedastic shocks present in the system as described in Luetkepohl and Milunovich (2016).}
 }
 \description{
 Given an estimated VAR model, this function uses GARCH-type variances to identify the structural impact matrix B of the corresponding SVAR model
@@ -69,7 +78,10 @@ summary(x2)
 }
 \references{
 Normadin, M. & Phaneuf, L., 2004. Monetary Policy Shocks: Testing Identification Conditions under Time-Varying Conditional Volatility. Journal of Monetary Economics, 51(6), 1217-1243.\cr
+
  Lanne, M. & Saikkonen, P., 2007. A Multivariate Generalized Orthogonal Factor GARCH Model. Journal of Business & Economic Statistics, 25(1), 61-75.
+
+ Luetkepohl, H. & Milunovich, G. 2016. Testing for identification in SVAR-GARCH models. Journal of Economic Dynamics and Control, 73(C):241-258
 }
 \seealso{
 For alternative identification approaches see \code{\link{id.st}}, \code{\link{id.cvm}}, \code{\link{id.cv}}, \code{\link{id.dc}} or \code{\link{id.ngml}}

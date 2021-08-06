@@ -58,8 +58,14 @@ summary.svars <- function(object, ...){
  print(svarsObject$B)
  cat("\nStandard Errors of B:\n")
  print(svarsObject$B_SE)
- cat("\nPairwise Wald Test:\n")
- printCoefmat(svarsObject$wald_statistic, has.Pvalue = T)
+ if(is.null(svarsObject$SB2)) {
+   cat("\nIdentification Wald Test of equal Eigenvalues:\n")
+   print(sort(diag(svarsObject$Lambda), decreasing = TRUE))
+   printCoefmat(svarsObject$wald_statistic, has.Pvalue = T)
+ } else {
+   cat("\nPairwise Wald Test:\n")
+   printCoefmat(svarsObject$wald_statistic, has.Pvalue = T)
+ }
  if(!is.null(svarsObject$SB2)){
    cat("\nPairwise Wald Test for second Lambda:\n")
    printCoefmat(svarsObject$wald_statistic2, has.Pvalue = T)
@@ -132,6 +138,10 @@ summary.svars <- function(object, ...){
    print(svarsObject$GARCH_parameter)
    cat("\nStandard errors of GARCH(1, 1) parameter: \n")
    print(svarsObject$GARCH_SE)
+   cat("\nSequence of tests for the number of heteroskedastic shocks in the system: \n")
+   cbind(printCoefmat(svarsObject$I_tes[1:3], has.Pvalue = T,signif.legend =FALSE),
+         printCoefmat(svarsObject$I_tes[4:6], has.Pvalue = T,signif.legend =FALSE),
+         printCoefmat(svarsObject$I_tes[7:9], has.Pvalue = T))
    if(svarsObject$restrictions > 0){
      cat("\nLikelihood Ratio Test: \n")
      #cat(svarsObject$lRatioTestStatistic)
