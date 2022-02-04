@@ -1,4 +1,4 @@
-0a7493f1ff53dab6d8654228ea6392ea *DESCRIPTION
+dd1841eb076440586c91c885a30c8172 *DESCRIPTION
 75338d298e59b479a49bfc0af6c68f86 *LICENSE
 5809f3a8101b63b6019d01f9bb5120a0 *NAMESPACE
 28c13e3e185d2ca026a07b46aeaefddf *R/RcppExports.R
@@ -16,7 +16,7 @@ c9947f493992a1c1a7459be566026db6 *R/getStructuralBreak.R
 665e275ed5211d47d9bce68883cdc4e2 *R/get_A_hat.R
 c64764e3e2dd02d8084b2e16ab0e0b30 *R/get_restriction_matrix.R
 5d069f8b17c60abb2a099fc1248e47a2 *R/get_var_objects.R
-f06d4dab8d95c9dea13c5adb1820aa2c *R/hd.R
+fb94907eaece2a1cacdc36e003dcbbfa *R/hd.R
 1c44eba0f11a88061d1970de6ac7bc40 *R/id.chol.R
 6b0cf76d5a7122282867c248705c40ac *R/id.cv.R
 ed7dea2f9a5efcd383749f15f286a17e *R/id.cvm.R
@@ -47,20 +47,20 @@ ae052a1ec20a8767965054fc8a30ced0 *R/print.svarfevd.R
 b51dac73f2d000fd73e4200b10a620ac *R/print.svarirf.R
 aed2712a9556f61fbfed5c8993781b33 *R/print.svars.R
 b332c78cb555c730d6a9b884a53d1839 *R/rotation.R
-d06ae4eebe0d60d08002676259547d57 *R/stability.R
+8654c07e875b6ea9ae5feddb78609786 *R/stability.R
 cb7029aab5f9b2023ec210eff55fa3d3 *R/summary.chow.R
 089a8bbb8cd754c8b18317db8765f7ad *R/summary.jstest.R
 3eee8636e599df2896e54ae565b5ecd4 *R/summary.sboot.R
 431cea94d5b37d46b026b59246de97ec *R/summary.svars.R
 9edcc0573ca94963cc6cbc133c7a0928 *R/svars.R
 454313ae63f9da346b70eec20d0df0e9 *R/zzz.R
-85eccdc59640326fae80e8d3e1e3b671 *build/partial.rdb
+17e808f6e42c6002a9740ca475838bea *build/partial.rdb
 66a481844d41c7a3b8fef720152b11b7 *build/vignette.rds
 d8fd45357618367092f214adfd3b059b *data/LN.rda
 5a2584d81973bf3e13ed929728ab58d7 *data/USA.RData
 ec4f7baf16c2fd38b4160671b515c915 *inst/CITATION
 6df373f4b5b5b375e086655f95c06f8b *inst/doc/svars.Rnw
-5a8fdc7fe23d0755fa726462fd7eda16 *inst/doc/svars.pdf
+16ca5e42c4b8b1932b3e60fa9064eeaf *inst/doc/svars.pdf
 5c4451a29a81e62fc1b838f49ead1efe *man/LN.Rd
 354c0e4f9773eb87c713dde748b6b9d9 *man/USA.Rd
 0c175a5ee00e8b4631ce2a34e462515c *man/ba.boot.Rd
@@ -86,7 +86,7 @@ e2a301bac21817928de09e461a1d2096 *man/id.st.Rd
 b318a41a45a75f7acf16e0f189e4c3d8 *man/irf.Rd
 2df4d6028102ade4c6d8c976042f539d *man/js.test.Rd
 cc8a553f15745901c8cf92ac514c55da *man/mb.boot.Rd
-5d18f75f93d36bda4675a765590a3e9a *man/stability.Rd
+bafe3a81de92956d199018a7e54c57cc *man/stability.Rd
 007b4261d61cbc45be8783aad0d112fa *man/svars.Rd
 9080e1cbbf2c3874997e80faa70e8dc8 *man/wild.boot.Rd
 e5668b9efd9979a3bae934a9a2deb5bd *src/ChangesInVolatility.cpp
