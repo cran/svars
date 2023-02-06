@@ -7,8 +7,8 @@
 \usage{
 \method{stability}{varest}(
   x,
-  type = c("OLS-CUSUM", "Rec-CUSUM", "Rec-MOSUM", "OLS-MOSUM", "RE", "ME",
-    "Score-CUSUM", "Score-MOSUM", "fluctuation", "mv-chow-test"),
+  type = c("OLS-CUSUM", "Rec-CUSUM", "Rec-MOSUM", "OLS-MOSUM", "RE", "ME", "Score-CUSUM",
+    "Score-MOSUM", "fluctuation", "mv-chow-test"),
   h = 0.15,
   dynamic = FALSE,
   rescale = TRUE,

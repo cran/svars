@@ -24,10 +24,12 @@
 #' @name fevd
 #' @aliases fevd.svars
 #' @import  vars
+#' @importFrom methods is
+#'
 #' @export
 
 fevd.svars <- function(x, n.ahead = 10, ...){
-  if(!(class(x)=="svars")){
+  if(!(is(x, "svars"))){
     stop("\nPlease provide an object of class 'svars'.\n")
   }
 

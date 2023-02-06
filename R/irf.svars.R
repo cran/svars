@@ -24,10 +24,12 @@
 #' @name irf
 #' @aliases irf.svars
 #' @import vars
+#' @importFrom methods is
+#'
 #' @export
 
 irf.svars <- function(x, ..., n.ahead = 20){
-  if(!(class(x)=="svars")){
+  if(!(is(x, "svars"))){
     stop("\nPlease provide an object of class 'svars'.\n")
   }
 

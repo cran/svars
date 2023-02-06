@@ -39,12 +39,14 @@
 #' summary(c.test)
 #' }
 #'
+#' @importFrom methods is
+#'
 #' @export
 #'
 
 js.test <- function(x, R, r = NULL){
 
-  if(class(x)!= 'sboot'){
+  if(!is(x, 'sboot')){
     stop("Please provide an object of class 'sboot'")
   }
   if(!is.matrix(R)){

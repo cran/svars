@@ -72,6 +72,7 @@
 #' @importFrom utils combn
 #' @importFrom vars VAR
 #' @importFrom expm sqrtm
+#' @importFrom methods is
 #'
 #' @export
 #'
@@ -87,7 +88,7 @@
 chow.test <- function(x, SB, nboot = 500, start = NULL, end = NULL,
                       frequency = NULL, format = NULL, dateVector = NULL){
 
-  if(class(x) == 'chowpretest'){
+  if(is(x, 'chowpretest')){
     if(x$break_point == TRUE){
       SB <-  which.max(x$teststat_bp)
     }else{

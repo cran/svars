@@ -47,12 +47,14 @@
 #' plot(bb2, lowerq = 0.16, upperq = 0.84)
 #' }
 #'
+#' @importFrom methods is
+#'
 #' @export
 
 
 ba.boot <- function(x, nc = 1){
 
-  if(class(x) != "sboot"){
+  if(!is(x, "sboot")){
     stop("The bootstrap-after-bootstrap can only be applied to already bootstrapped objects.")
   }
 

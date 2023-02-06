@@ -1,7 +1,7 @@
 #include <RcppArmadillo.h>
 
 // [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::plugins(cpp11)]]
+// [[Rcpp::plugins(cpp17)]]
 // [[Rcpp::export]]
 double LikelihoodCV(arma::vec& S, double& Tob, double& TB,  arma::mat& SigmaHat1, int& k,
                     arma::mat& SigmaHat2, arma::mat& RestrictionMatrix, int& restrictions){
@@ -44,7 +44,7 @@ double LikelihoodCV3regimes(arma::vec& S, int& TB1, int& TB2, int& TB3, arma::ma
   double MW3 = arma::det(MMM3);
 
 
-  if (any(vectorise(Psi) < 0.0) | any(vectorise(Psi2) < 0.0)) {
+  if (any(vectorise(Psi) < 0.0) || any(vectorise(Psi2) < 0.0)) {
     return 1e25;
   }
 
